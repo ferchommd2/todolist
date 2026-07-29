@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>To-Do List — UPA TIID05D</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>Sistema de Gestión de Tareas</h1>
+    <span>Base de Datos Avanzadas — UPA TIID05D</span>
+  </div>
+</header>
+
+<nav>
+  <button class="active" data-section="sec-users">Usuarios</button>
+  <button data-section="sec-categories">Categorías</button>
+  <button data-section="sec-tasks">Tareas</button>
+</nav>
+
+<main>
+
+  <!-- ===================== USUARIOS ===================== -->
+  <section id="sec-users" class="section active">
+    <h2>Usuarios</h2>
+
+    <div class="form-box">
+      <h3>Nuevo usuario</h3>
+      <div class="form-row">
+        <input id="user-name"  type="text"  placeholder="Nombre completo" />
+        <input id="user-email" type="email" placeholder="Correo electrónico" />
+        <button class="btn btn-primary" onclick="createUser()">Agregar</button>
+      </div>
+    </div>
+
+    <div id="users-grid" class="card-grid">
+      <p class="empty">Cargando...</p>
+    </div>
+  </section>
+
+  <!-- ===================== CATEGORÍAS ===================== -->
+  <section id="sec-categories" class="section">
+    <h2>Categorías</h2>
+
+    <div class="form-box">
+      <h3>Nueva categoría</h3>
+      <div class="form-row">
+        <input id="cat-name"  type="text"  placeholder="Nombre de la categoría" />
+        <input id="cat-color" type="color" value="#3498db" style="width:60px;padding:0.3rem" />
+        <button class="btn btn-primary" onclick="createCategory()">Agregar</button>
+      </div>
+    </div>
+
+    <div id="cats-grid" class="card-grid">
+      <p class="empty">Cargando...</p>
+    </div>
+  </section>
+
+  <!-- ===================== TAREAS ===================== -->
+  <section id="sec-tasks" class="section">
+    <h2>Tareas</h2>
+
+    <div class="form-box">
+      <h3>Nueva tarea</h3>
+      <div class="form-row">
+        <input id="task-title" type="text" placeholder="Título de la tarea" style="flex:2" />
+        <input id="task-due"   type="date" />
+      </div>
+      <div class="form-row">
+        <textarea id="task-desc" placeholder="Descripción (opcional)" rows="2" style="flex:2"></textarea>
+      </div>
+      <div class="form-row">
+        <select id="task-user"></select>
+        <select id="task-category"></select>
+        <button class="btn btn-primary" onclick="createTask()">Agregar tarea</button>
+      </div>
+    </div>
+
+    <div class="filter-bar">
+      <strong style="font-size:0.85rem">Filtrar:</strong>
+      <select id="filter-user" onchange="filterTasks()"></select>
+      <select id="filter-status" onchange="filterTasks()">
+        <option value="">Todos los estados</option>
+        <option value="pending">Pendiente</option>
+        <option value="in_progress">En progreso</option>
+        <option value="done">Completada</option>
+      </select>
+    </div>
+
+    <div id="tasks-grid" class="card-grid">
+      <p class="empty">Cargando...</p>
+    </div>
+  </section>
+
+</main>
+
+<div id="toast"></div>
+<script src="app.js"></script>
+</body>
+</html>
