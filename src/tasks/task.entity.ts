@@ -5,6 +5,5 @@ export type Task = {
   status: 'pending' | 'in_progress' | 'done';
   due_date: string;
   created_at: string;
-  user_id: number;
   category_id: number;
 };

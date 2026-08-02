@@ -3,6 +3,5 @@ export class CreateTaskDto {
   description?: string;
   status?: 'pending' | 'in_progress' | 'done';
   due_date?: string;
-  user_id: number;
   category_id?: number;
 }
