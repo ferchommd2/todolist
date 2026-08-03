@@ -34,53 +34,10 @@ document.querySelectorAll('nav button').forEach(btn => {
     document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
     btn.classList.add('active');
     document.getElementById(btn.dataset.section).classList.add('active');
-    if (btn.dataset.section === 'sec-users')      loadUsers();
     if (btn.dataset.section === 'sec-categories') loadCategories();
     if (btn.dataset.section === 'sec-tasks')      loadTasks();
   });
 });
-
-// ============================================================
-// USUARIOS
-// ============================================================
-async function loadUsers() {
-  const grid = document.getElementById('users-grid');
-  try {
-    const users = await api('GET', '/users');
-    if (!users.length) { grid.innerHTML = '<p class="empty">No hay usuarios registrados.</p>'; return; }
-    grid.innerHTML = users.map(u => `
-      <div class="card">
-        <h3>${u.name}</h3>
-        <p>📧 ${u.email}</p>
-        <p style="font-size:0.78rem;color:#a0aec0">Registrado: ${new Date(u.created_at).toLocaleDateString('es-MX')}</p>
-        <div class="actions">
-          <button class="btn btn-danger btn-sm" onclick="deleteUser(${u.id})">Eliminar</button>
-        </div>
-      </div>`).join('');
-  } catch (e) { grid.innerHTML = `<p class="empty">Error: ${e.message}</p>`; }
-}
-
-async function createUser() {
-  const name = val('user-name'), email = val('user-email');
-  if (!name || !email) { toast('Nombre y correo son obligatorios', 'err'); return; }
-  try {
-    await api('POST', '/users', { name, email });
-    document.getElementById('user-name').value = '';
-    document.getElementById('user-email').value = '';
-    toast('Usuario creado');
-    loadUsers();
-    loadTaskSelects();
-  } catch (e) { toast(e.message, 'err'); }
-}
-
-async function deleteUser(id) {
-  if (!confirm('¿Eliminar usuario? Se eliminarán también todas sus tareas.')) return;
-  try {
-    await api('DELETE', `/users/${id}`);
-    toast('Usuario eliminado');
-    loadUsers();
-  } catch (e) { toast(e.message, 'err'); }
-}
 
 // ============================================================
 // CATEGORÍAS
@@ -129,21 +86,10 @@ async function deleteCategory(id) {
 let allTasks = [];
 
 async function loadTaskSelects() {
-  const [users, cats] = await Promise.all([
-    api('GET', '/users').catch(() => []),
-    api('GET', '/categories').catch(() => []),
-  ]);
-
-  const uSel = document.getElementById('task-user');
+  const cats = await api('GET', '/categories').catch(() => []);
   const cSel = document.getElementById('task-category');
-  const fSel = document.getElementById('filter-user');
-
-  uSel.innerHTML = '<option value="">-- Usuario --</option>' +
-    users.map(u => `<option value="${u.id}">${u.name}</option>`).join('');
   cSel.innerHTML = '<option value="">Sin categoría</option>' +
     cats.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
-  fSel.innerHTML = '<option value="">Todos los usuarios</option>' +
-    users.map(u => `<option value="${u.id}">${u.name}</option>`).join('');
 }
 
 async function loadTasks() {
@@ -159,14 +105,15 @@ function renderTasks(tasks) {
   const grid = document.getElementById('tasks-grid');
   if (!tasks.length) { grid.innerHTML = '<p class="empty">No hay tareas.</p>'; return; }
   grid.innerHTML = tasks.map(t => {
-    const color = t.category?.color ?? '#cbd5e0';
-    const catName = t.category?.name ?? 'Sin categoría';
+    // El backend regresa category_name / category_color como campos planos
+    // (viene del LEFT JOIN), no como un objeto anidado t.category.
+    const color = t.category_color ?? '#cbd5e0';
+    const catName = t.category_name ?? 'Sin categoría';
     return `
       <div class="card" style="border-left-color:${color}">
         <h3>${t.title}</h3>
         <p><span class="badge ${t.status}">${statusLabel(t.status)}</span></p>
         ${t.description ? `<p style="margin-top:0.4rem">${t.description}</p>` : ''}
-        <p>👤 ${t.user?.name ?? '—'}</p>
         <p><span class="cat-dot" style="background:${color}"></span>${catName}</p>
         ${t.due_date ? `<p>📅 ${t.due_date}</p>` : ''}
         <div class="actions">
@@ -183,10 +130,8 @@ function statusLabel(s) {
 }
 
 function filterTasks() {
-  const userId = document.getElementById('filter-user').value;
   const status = document.getElementById('filter-status').value;
   let filtered = allTasks;
-  if (userId) filtered = filtered.filter(t => String(t.user?.id) === userId);
   if (status) filtered = filtered.filter(t => t.status === status);
   renderTasks(filtered);
 }
@@ -195,18 +140,15 @@ async function createTask() {
   const title = val('task-title');
   const description = val('task-desc');
   const due_date = val('task-due');
-  const user_id = parseInt(document.getElementById('task-user').value);
   const category_id = parseInt(document.getElementById('task-category').value) || undefined;
 
   if (!title) { toast('El título es obligatorio', 'err'); return; }
-  if (!user_id) { toast('Selecciona un usuario', 'err'); return; }
 
   try {
-    await api('POST', '/tasks', { title, description: description || undefined, due_date: due_date || undefined, user_id, category_id });
+    await api('POST', '/tasks', { title, description: description || undefined, due_date: due_date || undefined, category_id });
     document.getElementById('task-title').value = '';
     document.getElementById('task-desc').value = '';
     document.getElementById('task-due').value = '';
-    document.getElementById('task-user').value = '';
     document.getElementById('task-category').value = '';
     toast('Tarea creada');
     loadTasks();
@@ -241,4 +183,4 @@ async function deleteTask(id) {
 // ============================================================
 // Init
 // ============================================================
-loadUsers();
+loadCategories();

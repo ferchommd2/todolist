@@ -1,0 +1,119 @@
+{
+  "info": {
+    "name": "To-Do List API — Bases de Datos Avanzadas (UPA TIID05D)",
+    "description": "Colección de pruebas para la API REST de Categorías y Tareas.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:3000" }
+  ],
+  "item": [
+    {
+      "name": "Categories",
+      "item": [
+        {
+          "name": "Listar categorías",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/categories"
+          }
+        },
+        {
+          "name": "Ver una categoría",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/categories/1"
+          }
+        },
+        {
+          "name": "Crear categoría",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Hogar\",\n  \"color\": \"#9b59b6\"\n}"
+            },
+            "url": "{{base_url}}/categories"
+          }
+        },
+        {
+          "name": "Actualizar categoría",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"color\": \"#e67e22\"\n}"
+            },
+            "url": "{{base_url}}/categories/1"
+          }
+        },
+        {
+          "name": "Eliminar categoría",
+          "request": {
+            "method": "DELETE",
+            "url": "{{base_url}}/categories/1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Tasks",
+      "item": [
+        {
+          "name": "Listar tareas (con categoría — LEFT JOIN)",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/tasks"
+          }
+        },
+        {
+          "name": "Filtrar tareas por estado",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/tasks/status/pending"
+          }
+        },
+        {
+          "name": "Ver una tarea",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/tasks/1"
+          }
+        },
+        {
+          "name": "Crear tarea",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Hacer la tarea\",\n  \"status\": \"pending\",\n  \"category_id\": 2\n}"
+            },
+            "url": "{{base_url}}/tasks"
+          }
+        },
+        {
+          "name": "Actualizar estado de tarea",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"done\"\n}"
+            },
+            "url": "{{base_url}}/tasks/1"
+          }
+        },
+        {
+          "name": "Eliminar tarea",
+          "request": {
+            "method": "DELETE",
+            "url": "{{base_url}}/tasks/1"
+          }
+        }
+      ]
+    }
+  ]
+}

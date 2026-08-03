@@ -16,33 +16,14 @@
 </header>
 
 <nav>
-  <button class="active" data-section="sec-users">Usuarios</button>
-  <button data-section="sec-categories">Categorías</button>
+  <button class="active" data-section="sec-categories">Categorías</button>
   <button data-section="sec-tasks">Tareas</button>
 </nav>
 
 <main>
 
-  <!-- ===================== USUARIOS ===================== -->
-  <section id="sec-users" class="section active">
-    <h2>Usuarios</h2>
-
-    <div class="form-box">
-      <h3>Nuevo usuario</h3>
-      <div class="form-row">
-        <input id="user-name"  type="text"  placeholder="Nombre completo" />
-        <input id="user-email" type="email" placeholder="Correo electrónico" />
-        <button class="btn btn-primary" onclick="createUser()">Agregar</button>
-      </div>
-    </div>
-
-    <div id="users-grid" class="card-grid">
-      <p class="empty">Cargando...</p>
-    </div>
-  </section>
-
   <!-- ===================== CATEGORÍAS ===================== -->
-  <section id="sec-categories" class="section">
+  <section id="sec-categories" class="section active">
     <h2>Categorías</h2>
 
     <div class="form-box">
@@ -73,7 +54,6 @@
         <textarea id="task-desc" placeholder="Descripción (opcional)" rows="2" style="flex:2"></textarea>
       </div>
       <div class="form-row">
-        <select id="task-user"></select>
         <select id="task-category"></select>
         <button class="btn btn-primary" onclick="createTask()">Agregar tarea</button>
       </div>
@@ -81,7 +61,6 @@
 
     <div class="filter-bar">
       <strong style="font-size:0.85rem">Filtrar:</strong>
-      <select id="filter-user" onchange="filterTasks()"></select>
       <select id="filter-status" onchange="filterTasks()">
         <option value="">Todos los estados</option>
         <option value="pending">Pendiente</option>
